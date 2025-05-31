@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">Panel Principal del CRM</h1>
+  <p class="lead">Bienvenido. Selecciona una sección para comenzar:</p>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <!-- Enlaza al listado de clientes -->
+      <a href="{% url 'listado_clientes' %}" class="btn btn-outline-primary w-100 p-3 shadow-sm rounded">
+        📇 Gestión de Clientes
+      </a>
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- Enlaza a la vista de inicio de Obras (debes tener name='obras_inicio' en obras/urls.py) -->
+      <a href="{% url 'obras_inicio' %}" class="btn btn-outline-secondary w-100 p-3 shadow-sm rounded">
+        🧱 Gestión de Obras
+      </a>
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- Enlaza a la vista de inicio de Facturación (name='facturacion_inicio') -->
+      <a href="{% url 'facturacion_inicio' %}" class="btn btn-outline-success w-100 p-3 shadow-sm rounded">
+        💰 Facturación
+      </a>
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- Enlaza a la vista de inicio de Contabilidad (name='contabilidad_inicio') -->
+      <a href="{% url 'contabilidad_inicio' %}" class="btn btn-outline-warning w-100 p-3 shadow-sm rounded">
+        📊 Contabilidad
+      </a>
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- Enlaza al login de Usuarios (name='login') -->
+      <a href="{% url 'login' %}" class="btn btn-outline-dark w-100 p-3 shadow-sm rounded">
+        ⚙️ Administración de Usuarios
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
