@@ -1,55 +1,118 @@
 {# crm/usuarios/templates/usuarios/perfil.html #}
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-5" style="max-width: 600px;">
-  <h2 class="mb-4">Mi Perfil</h2>
-
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-
-  <form method="post" novalidate>
-    {% csrf_token %}
-
-    {{ form.non_field_errors }}
-
-    <div class="mb-3">
-      <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre</label>
-      {{ form.first_name }}
-      {% for error in form.first_name.errors %}
-        <div class="text-danger small">{{ error }}</div>
-      {% endfor %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Columna izq: Card con datos inmutables -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <!-- Imagen de perfil (placeholder) -->
+        <img src="{% static 'img/avatar-placeholder.png' %}"
+             class="card-img-top"
+             alt="Foto de perfil"
+             style="object-fit: cover; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title text-center">{{ request.user.username }}</h5>
+          <p class="text-center text-muted mb-2">
+            {% if request.user.is_staff %}
+              <span class="badge bg-primary">Administrador</span>
+            {% else %}
+              <span class="badge bg-secondary">Usuario</span>
+            {% endif %}
+          </p>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <strong>Nombre completo:</strong>
+              {{ request.user.get_full_name|default:"—" }}
+            </li>
+            <li class="list-group-item">
+              <strong>Email:</strong>
+              {{ request.user.email|default:"—" }}
+            </li>
+            <li class="list-group-item">
+              <strong>Fecha de alta:</strong>
+              {{ request.user.date_joined|date:"d M Y H:i" }}
+            </li>
+            <li class="list-group-item">
+              <strong>Último acceso:</strong>
+              {% if request.user.last_login %}
+                {{ request.user.last_login|date:"d M Y H:i" }}
+              {% else %}
+                Nunca
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellidos</label>
-      {{ form.last_name }}
-      {% for error in form.last_name.errors %}
-        <div class="text-danger small">{{ error }}</div>
-      {% endfor %}
+    <!-- Columna der: Formulario de edición -->
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h4 class="mb-0">Editar Información</h4>
+        </div>
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="row">
+              <!-- Nombre -->
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                  Nombre
+                </label>
+                {{ form.first_name }}
+                {% for error in form.first_name.errors %}
+                  <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <!-- Apellidos -->
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                  Apellidos
+                </label>
+                {{ form.last_name }}
+                {% for error in form.last_name.errors %}
+                  <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="{{ form.email.id_for_label }}" class="form-label">
+                Correo electrónico
+              </label>
+              {{ form.email }}
+              {% for error in form.email.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="d-flex align-items-center">
+              <button type="submit" class="btn btn-primary">
+                💾 Guardar cambios
+              </button>
+              <a href="{% url 'password_change' %}"
+                 class="btn btn-outline-warning ms-3">
+                🔒 Cambiar contraseña
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="mb-3">
-      <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico</label>
-      {{ form.email }}
-      {% for error in form.email.errors %}
-        <div class="text-danger small">{{ error }}</div>
-      {% endfor %}
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-    <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Cancelar</a>
-  </form>
-
-  <hr class="my-4">
-
-  <p>
-    <a href="{% url 'password_change' %}" class="btn btn-outline-warning">
-      🔒 Cambiar mi contraseña
-    </a>
-  </p>
+  </div>
 </div>
 {% endblock %}
