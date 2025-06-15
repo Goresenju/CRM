@@ -1,0 +1,8 @@
+<h2>Crear Obra</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Guardar</button>
+</form>
+<a href="{% url 'listado_obras' %}">Volver al listado</a>
+

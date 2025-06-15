@@ -1,13 +1,11 @@
-# crm/usuarios/urls.py
-
 from django.urls import path
-from .views import perfil_view, logout_view  # suponiendo que tienes un logout personalizado
+from django.contrib.auth.views import LogoutView
+from .views import perfil_view
 
 urlpatterns = [
-    # /usuarios/perfil/  → perfil del usuario (vista protegida con @login_required)
+    # Vista de perfil protegida
     path('perfil/', perfil_view, name='perfil'),
-    # /usuarios/logout/  → logout (si lo manejas con una vista propia)
-    path('logout/', logout_view, name='logout'),
 
-    # Nota: NO pongas aquí ninguna ruta 'login/' ni 'password_change/' (estas vendrán de django.contrib.auth.urls).
+    # Logout usando la vista integrada de Django con redirección al login
+    path('logout/', LogoutView.as_view(next_page='/usuarios/login/'), name='logout'),
 ]
